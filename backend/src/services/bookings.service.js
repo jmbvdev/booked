@@ -14,13 +14,13 @@ class BookingsService {
   }
 
   async update(id, data) {
-    const model = await this.findOne(id);
+    const model = await models.Booking.findByPk(id);
     const res = await model.update(data);
     return res;
   }
 
   async delete(id) {
-    const model = await this.findOne(id);
+    const model = await models.Booking.findByPk(id);
     await model.destroy();
     return { deleted: true };
   }
