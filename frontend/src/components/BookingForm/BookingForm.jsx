@@ -14,6 +14,7 @@ import {
   Typography,
 } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
+import { useBookings } from "../../hooks/useBookings";
 
 const styleModal = {
   position: "absolute",
@@ -45,8 +46,13 @@ const BookingForm = ({ open, onClose }) => {
     resolver: yupResolver(schema),
   });
 
+  const{createBookings}=useBookings()
+
+ 
+
   const onSubmitHandler = (data) => {
-    console.log(data);
+    const{status,description}=data
+    createBookings({status,description});
     reset();
   };
 
