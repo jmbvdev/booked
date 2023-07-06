@@ -3,7 +3,7 @@ import { AppBar, Box, Button, Menu, MenuItem, Toolbar } from "@mui/material";
 import { IoMdAdd } from "react-icons/io";
 import barrel from "../../assets/barrel.png";
 
-const NavBar = ({ language, setLanguage }) => {
+const NavBar = ({ language, setLanguage, handleOpenCreateModal }) => {
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const open = Boolean(anchorEl);
@@ -39,7 +39,9 @@ const NavBar = ({ language, setLanguage }) => {
           <img src={barrel} alt="logo" width="100%" />
         </Box>
 
-        <Box sx={{ display: "flex", gap: { xs: 0, sm: 4 },mr: { xs: 0, sm: 6 }, }}>
+        <Box
+          sx={{ display: "flex", gap: { xs: 0, sm: 4 }, mr: { xs: 0, sm: 6 } }}
+        >
           <Button
             id="basic-button"
             aria-controls={open ? "basic-menu" : undefined}
@@ -96,6 +98,7 @@ const NavBar = ({ language, setLanguage }) => {
               height: 40,
               p: 2,
             }}
+            onClick={handleOpenCreateModal}
             startIcon={<IoMdAdd />}
           >
             {language ? "Añadir Booking" : "Add booking"}

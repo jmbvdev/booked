@@ -10,6 +10,7 @@ import {
 import NavBar from "./components/NavBar/NavBar";
 import BookingCard from "./components/BookingCard/BookingCard";
 import { useState } from "react";
+import BookingForm from "./components/BookingForm/BookingForm";
 
 function App() {
   const bookings = [
@@ -47,8 +48,17 @@ function App() {
   const cardsPerPage = 6;
   const totalPages = Math.ceil(bookings.length / cardsPerPage);
 
+  const [openCreateModal, setOpenCreateModal] = useState(false);
   const handleChange = (_, value) => {
     setPage(value);
+  };
+
+  const handleOpenCreateModal = () => {
+    setOpenCreateModal(true);
+  };
+
+  const handleCloseCreateModal = () => {
+    setOpenCreateModal(false);
   };
 
   const startIndex = (page - 1) * cardsPerPage;
@@ -57,8 +67,10 @@ function App() {
 
   return (
     <>
-      <NavBar language={language} setLanguage={setLanguage} />
-      <Container >
+      <NavBar language={language} setLanguage={setLanguage} handleOpenCreateModal={handleOpenCreateModal} />
+      <Container>
+      <BookingForm open={openCreateModal}
+          onClose={handleCloseCreateModal}/>
         <Box
           sx={{
             mt: { xs: 2, sm: 4 },
@@ -66,21 +78,17 @@ function App() {
             alignItems: "center",
             flexDirection: "column",
             textAlign: "center",
-            gap:{ xs: 2, sm: 4 }
+            gap: { xs: 2, sm: 4 },
           }}
         >
-          <Typography variant="h4" component="h1" textTransform='uppercase'>
-            {
-              language?
-              'bookings disponibles ':
-              'Bookings available'
-            }
+          <Typography variant="h4" component="h1" textTransform="uppercase">
+            {language ? "bookings disponibles " : "Bookings available"}
           </Typography>
 
           <Divider />
-          <Grid container spacing={4} >
+          <Grid container spacing={4}>
             {visibleBookings.map((booking) => (
-              <Grid item key={booking.id} xs={12} sm={6}  lg={4}>
+              <Grid item key={booking.id} xs={12} sm={6} lg={4}>
                 <BookingCard booking={booking} />
               </Grid>
             ))}
