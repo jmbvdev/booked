@@ -14,12 +14,18 @@ function App() {
 
   const [openCreateModal, setOpenCreateModal] = useState(false);
 
+  const[isUpdate, setIsUpdate]=useState(false)
+
+  const[actualBooking,setActualBooking]=useState({status:true,description:''})
+
   const handleOpenCreateModal = () => {
     setOpenCreateModal(true);
   };
 
   const handleCloseCreateModal = () => {
+    setActualBooking({status:true,description:''})
     setOpenCreateModal(false);
+    setIsUpdate(false)
   };
 
   //Pagination-----------------------/
@@ -49,6 +55,10 @@ function App() {
           <BookingForm
             open={openCreateModal}
             onClose={handleCloseCreateModal}
+            isUpdate={isUpdate}
+            booking={actualBooking}
+            
+
           />
           <Box
             sx={{
@@ -70,7 +80,7 @@ function App() {
                 {
                   visibleBookings.map((booking) => (
                     <Grid item key={booking.id} xs={12} sm={6} lg={4}>
-                      <BookingCard booking={booking} />
+                      <BookingCard booking={booking}  setOpenCreateModal={setOpenCreateModal} setIsUpdate={setIsUpdate} setActualBooking={setActualBooking} />
                     </Grid>
                   ))}
               </Grid>

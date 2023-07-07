@@ -43,6 +43,22 @@ export function BookingProvider({ children }) {
       setBookings({ ...bookings, error: error.message });
     }
   };
+  const updateBooking = async (bookingId, updatedData) => {
+    try {
+      await axios.put(
+        `http://localhost:3000/api/v1/bookings/${bookingId}`,
+        updatedData
+      );
+      setBookings((prevBookings) => ({
+        ...prevBookings,
+        data: prevBookings.data.map((booking) =>
+          booking.id === bookingId ? { ...booking, ...updatedData } : booking
+        ),
+      }));
+    } catch (error) {
+      setBookings({ ...bookings, error: error.message });
+    }
+  };
 
   const deleteBooking = async (bookingId) => {
     try {
@@ -68,6 +84,7 @@ export function BookingProvider({ children }) {
         error: bookings.error,
         createBookings,
         deleteBooking,
+        updateBooking,
       }}
     >
       {children}

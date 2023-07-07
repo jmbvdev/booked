@@ -1,15 +1,31 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Paper, Stack, Typography } from "@mui/material";
 import { FaCircle } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
 import { BiSolidEditAlt } from "react-icons/bi";
+import { useBookings } from "../../hooks/useBookings";
 
 const BACKGROUND_COLOR = [
   "linear-gradient(90deg, rgba(0,97,148,0) 0%, rgba(15,88,103,0.31976540616246496) 100%)",
   "linear-gradient(90deg, rgba(0,97,148,0) 0%, rgba(0,0,0,0.31976540616246496) 100%)",
 ];
 
-const BookingCard = memo(({ booking }) => {
+const BookingCard = memo(({ booking,setOpenCreateModal,setIsUpdate,setActualBooking }) => {
+  const { deleteBooking } = useBookings();
+
+ 
+
+  const handleEditBooking = () => {
+  
+    setIsUpdate(true)
+    setOpenCreateModal(true);
+    setActualBooking({status:booking.status,description:booking.description})
+  };
+
+  const handleDelete = () => {
+    deleteBooking(booking.id);
+  };
+
   return (
     <Paper
       elevation={3}
@@ -58,8 +74,13 @@ const BookingCard = memo(({ booking }) => {
         {booking.description}
       </Typography>
       <Stack direction="row" alignContent="end" m={2} gap={1}>
-        <RiDeleteBin6Fill color="#9f2e2e" fontSize={20} cursor="pointer" />
-        <BiSolidEditAlt fontSize={20} cursor="pointer" />
+        <RiDeleteBin6Fill
+          color="#9f2e2e"
+          fontSize={20}
+          cursor="pointer"
+          onClick={handleDelete}
+        />
+        <BiSolidEditAlt fontSize={20} cursor="pointer" onClick={handleEditBooking} />
       </Stack>
     </Paper>
   );

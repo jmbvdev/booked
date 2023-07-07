@@ -36,8 +36,7 @@ const schema = yup.object().shape({
   status: yup.boolean().required(),
   description: yup.string().min(8).max(150).required(),
 });
-
-const BookingForm = ({ open, onClose, isUpdate, booking }) => {
+const ModalForm = ({ open, onClose, booking }) => {
   const {
     register,
     handleSubmit,
@@ -47,15 +46,13 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
     resolver: yupResolver(schema),
   });
 
-  const { createBookings, updateBooking } = useBookings();
+  const { updateBooking } = useBookings();
 
   const onSubmitHandler = (data) => {
     const { status, description } = data;
-    if (isUpdate) {
-      updateBooking(booking.id, { status, description });
-    } else {
-      createBookings({ status, description });
-    }
+
+    updateBooking(booking.id, { status, description });
+
     reset();
     onClose();
   };
@@ -82,7 +79,7 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
           textTransform="uppercase"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          {isUpdate ? "Update Booking" : "Create Booking"}
+          Update Booking
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmitHandler)}
@@ -127,4 +124,4 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
   );
 };
 
-export default BookingForm;
+export default ModalForm;
