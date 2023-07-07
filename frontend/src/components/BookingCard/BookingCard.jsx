@@ -1,4 +1,4 @@
-import React, { memo, useState } from "react";
+import React, { memo } from "react";
 import { Paper, Stack, Typography } from "@mui/material";
 import { FaCircle } from "react-icons/fa";
 import { RiDeleteBin6Fill } from "react-icons/ri";
@@ -10,80 +10,84 @@ const BACKGROUND_COLOR = [
   "linear-gradient(90deg, rgba(0,97,148,0) 0%, rgba(0,0,0,0.31976540616246496) 100%)",
 ];
 
-const BookingCard = memo(({ booking,setOpenCreateModal,setIsUpdate,setActualBooking }) => {
-  const { deleteBooking } = useBookings();
+const BookingCard = memo(
+  ({ booking, setOpenUpdateModal, setActualBooking }) => {
+    const { deleteBooking } = useBookings();
 
- 
+    const handleEditBooking = () => {
+      setActualBooking(booking);
+      setOpenUpdateModal(true);
+    };
 
-  const handleEditBooking = () => {
-  
-    setIsUpdate(true)
-    setOpenCreateModal(true);
-    setActualBooking({status:booking.status,description:booking.description})
-  };
+    const handleDelete = () => {
+      deleteBooking(booking.id);
+    };
 
-  const handleDelete = () => {
-    deleteBooking(booking.id);
-  };
-
-  return (
-    <Paper
-      elevation={3}
-      sx={{
-        height: 200,
-        borderRadius: 5,
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "space-between",
-        background: booking.status ? BACKGROUND_COLOR[0] : BACKGROUND_COLOR[1],
-        ":hover": {
-          boxShadow: " 0px 5px 10px 0px rgba(0, 0, 0, 0.5); ",
-        },
-      }}
-    >
-      <Stack
-        alignItems="center"
-        direction="row"
-        justifyContent="right"
-        gap={1}
-        mr={2}
+    return (
+      <Paper
+        elevation={3}
+        sx={{
+          height: 200,
+          borderRadius: 5,
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "space-between",
+          background: booking.status
+            ? BACKGROUND_COLOR[0]
+            : BACKGROUND_COLOR[1],
+          ":hover": {
+            boxShadow: " 0px 5px 10px 0px rgba(0, 0, 0, 0.5); ",
+          },
+        }}
       >
-        <Typography
-          variant="caption"
-          sx={{
-            color: "common.black",
-            my: 1,
-            fontSize: 11,
-            fontWeight: "medium",
-            textTransform: "uppercase",
-          }}
+        <Stack
+          alignItems="center"
+          direction="row"
+          justifyContent="right"
+          gap={1}
+          mr={2}
         >
-          {booking.status ? "disponible" : "no disponible"}
+          <Typography
+            variant="caption"
+            sx={{
+              color: "common.black",
+              my: 1,
+              fontSize: 11,
+              fontWeight: "medium",
+              textTransform: "uppercase",
+            }}
+          >
+            {booking.status ? "disponible" : "no disponible"}
+          </Typography>
+          <FaCircle
+            style={{ fontSize: 12, color: booking.status ? "green" : "gray" }}
+          />
+        </Stack>
+        <Typography
+          variant="subtitle2"
+          textAlign="left"
+          mx={4}
+          color="#5e5e5e"
+          sx={{ fontStyle: "oblique" }}
+        >
+          {booking.description}
         </Typography>
-        <FaCircle
-          style={{ fontSize: 12, color: booking.status ? "green" : "gray" }}
-        />
-      </Stack>
-      <Typography
-        variant="subtitle2"
-        textAlign="left"
-        mx={4}
-        color="#5e5e5e"
-        sx={{ fontStyle: "oblique" }}
-      >
-        {booking.description}
-      </Typography>
-      <Stack direction="row" alignContent="end" m={2} gap={1}>
-        <RiDeleteBin6Fill
-          color="#9f2e2e"
-          fontSize={20}
-          cursor="pointer"
-          onClick={handleDelete}
-        />
-        <BiSolidEditAlt fontSize={20} cursor="pointer" onClick={handleEditBooking} />
-      </Stack>
-    </Paper>
-  );
-});
+        <Stack direction="row" alignContent="end" m={2} gap={1}>
+          <RiDeleteBin6Fill
+            color="#9f2e2e"
+            fontSize={20}
+            cursor="pointer"
+            onClick={handleDelete}
+          />
+          <BiSolidEditAlt
+            fontSize={20}
+            cursor="pointer"
+            onClick={handleEditBooking}
+          />
+        </Stack>
+      </Paper>
+    );
+  }
+);
 
 export default BookingCard;

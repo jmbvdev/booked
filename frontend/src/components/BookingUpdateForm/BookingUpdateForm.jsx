@@ -36,8 +36,8 @@ const schema = yup.object().shape({
   status: yup.boolean().required(),
   description: yup.string().min(8).max(150).required(),
 });
-
-const BookingForm = ({ open, onClose, isUpdate, booking }) => {
+const BookingUpdateForm = ({ open, onClose, booking, setActualBooking ,actualBooking}) => {
+  
   const {
     register,
     handleSubmit,
@@ -47,15 +47,17 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
     resolver: yupResolver(schema),
   });
 
-  const { createBookings, updateBooking } = useBookings();
+  const { updateBooking } = useBookings();
 
   const onSubmitHandler = (data) => {
     const { status, description } = data;
-    if (isUpdate) {
-      updateBooking(booking.id, { status, description });
-    } else {
-      createBookings({ status, description });
-    }
+
+    updateBooking(booking.id, { status, description });
+    setActualBooking({
+      status: true,
+      description: "",
+    });
+
     reset();
     onClose();
   };
@@ -82,7 +84,7 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
           textTransform="uppercase"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          {isUpdate ? "Update Booking" : "Create Booking"}
+          Update Booking
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmitHandler)}
@@ -99,7 +101,7 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
               labelId="select-status"
               id="status"
               label="Status"
-              defaultValue={booking.status}
+              defaultValue={actualBooking?.status}
               {...register("status")}
             >
               <MenuItem value={true}>Disponible</MenuItem>
@@ -112,14 +114,19 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
             id="description"
             label="Descripción"
             {...register("description")}
-            defaultValue={booking.description}
-            multiline
+            value={actualBooking.description || ""}
+            onChange={(e) => {
+              if (actualBooking.description !== e.target.value) {
+                setActualBooking({ ...actualBooking, description: e.target.value });
+              }
+            }}
+            multiline={true}
             rows={5}
             helperText={errors.description?.message}
           />
 
           <Button variant="contained" color="error" type="submit">
-            Create
+            Update
           </Button>
         </form>
       </Box>
@@ -127,4 +134,4 @@ const BookingForm = ({ open, onClose, isUpdate, booking }) => {
   );
 };
 
-export default BookingForm;
+export default BookingUpdateForm;

@@ -18,9 +18,9 @@ import { useBookings } from "../../hooks/useBookings";
 
 const styleModal = {
   position: "absolute",
+  height:'50%',
   top: "50%",
   left: "50%",
-  height: "50%",
   transform: "translate(-50%, -50%)",
   width: { xs: 300, sm: 400 },
   bgcolor: "background.paper",
@@ -29,14 +29,15 @@ const styleModal = {
   p: 4,
   display: "flex",
   flexDirection: "column",
-  gap: 4,
+  gap: 8,
 };
 
 const schema = yup.object().shape({
   status: yup.boolean().required(),
   description: yup.string().min(8).max(150).required(),
 });
-const ModalForm = ({ open, onClose, booking }) => {
+
+const BookingForm = ({ open, onClose, isUpdate }) => {
   const {
     register,
     handleSubmit,
@@ -46,15 +47,12 @@ const ModalForm = ({ open, onClose, booking }) => {
     resolver: yupResolver(schema),
   });
 
-  const { updateBooking } = useBookings();
+  const { createBookings } = useBookings();
 
   const onSubmitHandler = (data) => {
     const { status, description } = data;
-
-    updateBooking(booking.id, { status, description });
-
+    createBookings({ status, description });
     reset();
-    onClose();
   };
 
   return (
@@ -79,7 +77,7 @@ const ModalForm = ({ open, onClose, booking }) => {
           textTransform="uppercase"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          Update Booking
+          {isUpdate ? "Update Booking" : "Create Booking"}
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmitHandler)}
@@ -95,8 +93,9 @@ const ModalForm = ({ open, onClose, booking }) => {
             <Select
               labelId="select-status"
               id="status"
+              name="status"
+              defaultValue={true}
               label="Status"
-              defaultValue={booking.status}
               {...register("status")}
             >
               <MenuItem value={true}>Disponible</MenuItem>
@@ -109,9 +108,8 @@ const ModalForm = ({ open, onClose, booking }) => {
             id="description"
             label="Descripción"
             {...register("description")}
-            defaultValue={booking.description}
             multiline
-            rows={5}
+            rows={3}
             helperText={errors.description?.message}
           />
 
@@ -124,4 +122,4 @@ const ModalForm = ({ open, onClose, booking }) => {
   );
 };
 
-export default ModalForm;
+export default BookingForm;
