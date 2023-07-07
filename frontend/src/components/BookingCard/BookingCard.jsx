@@ -11,7 +11,7 @@ const BACKGROUND_COLOR = [
 ];
 
 const BookingCard = memo(
-  ({ booking, setOpenUpdateModal, setActualBooking }) => {
+  ({ booking, setOpenUpdateModal, setActualBooking, language }) => {
     const { deleteBooking } = useBookings();
 
     const handleEditBooking = () => {
@@ -57,7 +57,13 @@ const BookingCard = memo(
               textTransform: "uppercase",
             }}
           >
-            {booking.status ? "disponible" : "no disponible"}
+            {booking.status
+              ? language
+                ? `Disponible`
+                : "Available"
+              : language
+              ? `No Disponible`
+              : "Disabled"}
           </Typography>
           <FaCircle
             style={{ fontSize: 12, color: booking.status ? "green" : "gray" }}

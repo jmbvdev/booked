@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -12,6 +12,7 @@ import {
   Select,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
 import { useBookings } from "../../hooks/useBookings";
@@ -24,7 +25,6 @@ const styleModal = {
   transform: "translate(-50%, -50%)",
   width: { xs: 300, sm: 400 },
   bgcolor: "background.paper",
-  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
   display: "flex",
@@ -36,8 +36,13 @@ const schema = yup.object().shape({
   status: yup.boolean().required(),
   description: yup.string().min(8).max(150).required(),
 });
-const BookingUpdateForm = ({ open, onClose, booking, setActualBooking ,actualBooking}) => {
-  
+const BookingUpdateForm = ({
+  open,
+  onClose,
+  booking,
+  setActualBooking,
+  actualBooking,
+}) => {
   const {
     register,
     handleSubmit,
@@ -47,19 +52,29 @@ const BookingUpdateForm = ({ open, onClose, booking, setActualBooking ,actualBoo
     resolver: yupResolver(schema),
   });
 
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const { updateBooking } = useBookings();
 
-  const onSubmitHandler = (data) => {
+  const onSubmitHandler = async (data) => {
     const { status, description } = data;
 
+    setShowSpinner(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     updateBooking(booking.id, { status, description });
+
     setActualBooking({
       status: true,
       description: "",
     });
 
     reset();
+
     onClose();
+
+    setShowSpinner(false);
   };
 
   return (
@@ -117,7 +132,10 @@ const BookingUpdateForm = ({ open, onClose, booking, setActualBooking ,actualBoo
             value={actualBooking.description || ""}
             onChange={(e) => {
               if (actualBooking.description !== e.target.value) {
-                setActualBooking({ ...actualBooking, description: e.target.value });
+                setActualBooking({
+                  ...actualBooking,
+                  description: e.target.value,
+                });
               }
             }}
             multiline={true}
@@ -125,8 +143,13 @@ const BookingUpdateForm = ({ open, onClose, booking, setActualBooking ,actualBoo
             helperText={errors.description?.message}
           />
 
-          <Button variant="contained" color="error" type="submit">
-            Update
+          <Button
+            variant="contained"
+            color="error"
+            type="submit"
+            disabled={showSpinner}
+          >
+            {showSpinner ? <CircularProgress size={20} /> : "Update"}
           </Button>
         </form>
       </Box>

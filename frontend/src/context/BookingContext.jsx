@@ -10,6 +10,10 @@ export function BookingProvider({ children }) {
     error: null,
   });
 
+  const [showAlert, setShowAlert]=useState(false)
+
+  const[alertLabel, setAlertLabel]=useState('')
+
   const fetchBookings = async () => {
     setBookings({
       data: null,
@@ -39,6 +43,8 @@ export function BookingProvider({ children }) {
         ...prevBookings,
         data: [...prevBookings.data, newBooking],
       }));
+      setShowAlert(true);
+      setAlertLabel('Booking Sussecully created')
     } catch (error) {
       setBookings({ ...bookings, error: error.message });
     }
@@ -55,6 +61,8 @@ export function BookingProvider({ children }) {
           booking.id === bookingId ? { ...booking, ...updatedData } : booking
         ),
       }));
+      setShowAlert(true);
+      setAlertLabel('Booking Sussecully updated')
     } catch (error) {
       setBookings({ ...bookings, error: error.message });
     }
@@ -74,6 +82,7 @@ export function BookingProvider({ children }) {
 
   useEffect(() => {
     fetchBookings();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -85,6 +94,9 @@ export function BookingProvider({ children }) {
         createBookings,
         deleteBooking,
         updateBooking,
+        showAlert,
+        setShowAlert,
+        alertLabel
       }}
     >
       {children}

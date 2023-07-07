@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -12,13 +12,14 @@ import {
   Select,
   TextField,
   Typography,
+  CircularProgress,
 } from "@mui/material";
 import { IoMdClose } from "react-icons/io";
 import { useBookings } from "../../hooks/useBookings";
 
 const styleModal = {
   position: "absolute",
-  height:'50%',
+  height: "50%",
   top: "50%",
   left: "50%",
   transform: "translate(-50%, -50%)",
@@ -37,7 +38,7 @@ const schema = yup.object().shape({
   description: yup.string().min(8).max(150).required(),
 });
 
-const BookingForm = ({ open, onClose, isUpdate }) => {
+const BookingCreateForm = ({ open, onClose, language }) => {
   const {
     register,
     handleSubmit,
@@ -47,12 +48,24 @@ const BookingForm = ({ open, onClose, isUpdate }) => {
     resolver: yupResolver(schema),
   });
 
+  const [showSpinner, setShowSpinner] = useState(false);
+
   const { createBookings } = useBookings();
 
-  const onSubmitHandler = (data) => {
+  const onSubmitHandler = async (data) => {
     const { status, description } = data;
+
+    setShowSpinner(true);
+
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
     createBookings({ status, description });
+
     reset();
+
+    onClose();
+
+    setShowSpinner(false);
   };
 
   return (
@@ -77,7 +90,7 @@ const BookingForm = ({ open, onClose, isUpdate }) => {
           textTransform="uppercase"
           sx={{ textAlign: "center", fontWeight: "bold" }}
         >
-          {isUpdate ? "Update Booking" : "Create Booking"}
+          {language ? `Crear Booking` : "Create Booking"}
         </Typography>
         <form
           onSubmit={handleSubmit(onSubmitHandler)}
@@ -89,7 +102,10 @@ const BookingForm = ({ open, onClose, isUpdate }) => {
           }}
         >
           <FormControl fullWidth>
-            <InputLabel id="status">Estado</InputLabel>
+            <InputLabel id="status">
+              {" "}
+              {language ? `Estado` : "State"}
+            </InputLabel>
             <Select
               labelId="select-status"
               id="status"
@@ -98,23 +114,40 @@ const BookingForm = ({ open, onClose, isUpdate }) => {
               label="Status"
               {...register("status")}
             >
-              <MenuItem value={true}>Disponible</MenuItem>
-              <MenuItem value={false}>No disponible</MenuItem>
+              <MenuItem value={true}>
+                {" "}
+                {language ? `Disponible` : "Available"}
+              </MenuItem>
+              <MenuItem value={false}>
+                {" "}
+                {language ? `No Disponible` : "Disabled"}
+              </MenuItem>
             </Select>
           </FormControl>
           <TextField
             fullWidth
             error={errors.description?.message ? true : false}
             id="description"
-            label="Descripción"
+            label={language ? `Descripción` : "Description"}
             {...register("description")}
             multiline
             rows={3}
             helperText={errors.description?.message}
           />
 
-          <Button variant="contained" color="error" type="submit">
-            Create
+          <Button
+            variant="contained"
+            color="error"
+            type="submit"
+            disabled={showSpinner}
+          >
+            {showSpinner ? (
+              <CircularProgress size={20} />
+            ) : language ? (
+              `Crear`
+            ) : (
+              "Create"
+            )}
           </Button>
         </form>
       </Box>
@@ -122,4 +155,4 @@ const BookingForm = ({ open, onClose, isUpdate }) => {
   );
 };
 
-export default BookingForm;
+export default BookingCreateForm;
