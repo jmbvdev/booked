@@ -3,6 +3,8 @@ import axios from "axios";
 
 export const BookingContext = createContext();
 
+const URL='http://localhost:3000/api/v1/bookings'
+
 export function BookingProvider({ children }) {
   const [bookings, setBookings] = useState({
     loading: true,
@@ -10,9 +12,9 @@ export function BookingProvider({ children }) {
     error: null,
   });
 
-  const [showAlert, setShowAlert]=useState(false)
+  const [showAlert, setShowAlert] = useState(false);
 
-  const[alertLabel, setAlertLabel]=useState('')
+  const [alertLabel, setAlertLabel] = useState("");
 
   const fetchBookings = async () => {
     setBookings({
@@ -21,7 +23,7 @@ export function BookingProvider({ children }) {
       loading: true,
     });
     try {
-      const res = await axios.get("http://localhost:3000/api/v1/bookings");
+      const res = await axios.get(URL);
       setBookings({
         data: res.data,
         error: null,
@@ -34,7 +36,7 @@ export function BookingProvider({ children }) {
 
   const createBookings = async ({ status, description }) => {
     try {
-      const res = await axios.post("http://localhost:3000/api/v1/bookings", {
+      const res = await axios.post(URL, {
         status,
         description,
       });
@@ -44,7 +46,7 @@ export function BookingProvider({ children }) {
         data: [...prevBookings.data, newBooking],
       }));
       setShowAlert(true);
-      setAlertLabel('Booking Sussecully created')
+      setAlertLabel("Booking Sussecully created");
     } catch (error) {
       setBookings({ ...bookings, error: error.message });
     }
@@ -52,7 +54,7 @@ export function BookingProvider({ children }) {
   const updateBooking = async (bookingId, updatedData) => {
     try {
       await axios.put(
-        `http://localhost:3000/api/v1/bookings/${bookingId}`,
+        `${URL}/${bookingId}`,
         updatedData
       );
       setBookings((prevBookings) => ({
@@ -62,7 +64,7 @@ export function BookingProvider({ children }) {
         ),
       }));
       setShowAlert(true);
-      setAlertLabel('Booking Sussecully updated')
+      setAlertLabel("Booking Sussecully updated");
     } catch (error) {
       setBookings({ ...bookings, error: error.message });
     }
@@ -70,7 +72,7 @@ export function BookingProvider({ children }) {
 
   const deleteBooking = async (bookingId) => {
     try {
-      await axios.delete(`http://localhost:3000/api/v1/bookings/${bookingId}`);
+      await axios.delete(`${URL}/${bookingId}`);
       setBookings((prevBookings) => ({
         ...prevBookings,
         data: prevBookings.data.filter((booking) => booking.id !== bookingId),
@@ -82,7 +84,7 @@ export function BookingProvider({ children }) {
 
   useEffect(() => {
     fetchBookings();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -96,7 +98,7 @@ export function BookingProvider({ children }) {
         updateBooking,
         showAlert,
         setShowAlert,
-        alertLabel
+        alertLabel,
       }}
     >
       {children}

@@ -88,7 +88,12 @@ function App() {
               gap: { xs: 2, sm: 4 },
             }}
           >
-            <Typography variant="h4" component="h1" textTransform="uppercase">
+            <Typography
+              variant="h4"
+              component="h1"
+              textTransform="uppercase"
+              sx={{ textAlign: "center", fontWeight: "bold" }}
+            >
               {language ? "bookings disponibles " : "Bookings available"}
             </Typography>
 
@@ -118,7 +123,11 @@ function App() {
               />
             )}
             {showAlert && (
-              <Alert severity="success" onClose={() => setShowAlert(false)}>
+              <Alert
+                severity="success"
+                variant="filled"
+                onClose={() => setShowAlert(false)}
+              >
                 {alertLabel}
               </Alert>
             )}

@@ -18,10 +18,10 @@ const Loading = () => {
         >
           <Divider />
 
-          <Grid container spacing={4} >
+          <Grid container spacing={4}>
             {[1, 2, 3, 4, 5, 6].map((booking) => (
               <Grid item key={booking} xs={12} sm={6} lg={4}>
-                <Skeleton sx={{height:300}} />
+                <Skeleton sx={{ height: 300 }} />
               </Grid>
             ))}
           </Grid>
