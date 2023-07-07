@@ -54,88 +54,91 @@ function App() {
 
   //////--------------------------/
 
-  if (loading) {
-    return <Loading />;
-  } else if (data) {
-    return (
-      <>
-        <NavBar
-          language={language}
-          setLanguage={setLanguage}
-          handleOpenCreateModal={handleOpenCreateModal}
-        />
-        <Container>
-          <BookingCreateForm
-            open={openCreateModal}
-            onClose={handleCloseCreateModal}
+  const renderContent = () => {
+    if (loading) {
+      return <Loading />;
+    } else if (data) {
+      return (
+        <>
+          <NavBar
             language={language}
+            setLanguage={setLanguage}
+            handleOpenCreateModal={handleOpenCreateModal}
           />
-          <BookingUpdateForm
-            open={openUpdateModal}
-            onClose={handleCloseUpdateModal}
-            booking={actualBooking}
-            setActualBooking={setActualBooking}
-            actualBooking={actualBooking}
-          />
+          <Container>
+            <BookingCreateForm
+              open={openCreateModal}
+              onClose={handleCloseCreateModal}
+              language={language}
+            />
+            <BookingUpdateForm
+              open={openUpdateModal}
+              onClose={handleCloseUpdateModal}
+              booking={actualBooking}
+              setActualBooking={setActualBooking}
+              actualBooking={actualBooking}
+            />
 
-          <Box
-            sx={{
-              mt: { xs: 2, sm: 4 },
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "column",
-              textAlign: "center",
-              gap: { xs: 2, sm: 4 },
-            }}
-          >
-            <Typography
-              variant="h4"
-              component="h1"
-              textTransform="uppercase"
-              sx={{ textAlign: "center", fontWeight: "bold" }}
+            <Box
+              sx={{
+                mt: { xs: 2, sm: 4 },
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "column",
+                textAlign: "center",
+                gap: { xs: 2, sm: 4 },
+              }}
             >
-              {language ? "bookings disponibles " : "Bookings available"}
-            </Typography>
-
-            <Divider />
-            {visibleBookings.length ? (
-              <Grid container spacing={4}>
-                {visibleBookings.map((booking) => (
-                  <Grid item key={booking.id} xs={12} sm={6} lg={4}>
-                    <BookingCard
-                      booking={booking}
-                      setActualBooking={setActualBooking}
-                      setOpenUpdateModal={setOpenUpdateModal}
-                      language={language}
-                    />
-                  </Grid>
-                ))}
-              </Grid>
-            ) : (
-              <Empty />
-            )}
-
-            {visibleBookings.length && (
-              <PaginationContainer
-                data={data}
-                cardsPerPage={cardsPerPage}
-                onPageChange={handlePageChange}
-              />
-            )}
-            {showAlert && (
-              <Alert
-                severity="success"
-                variant="filled"
-                onClose={() => setShowAlert(false)}
+              <Typography
+                variant="h4"
+                component="h1"
+                textTransform="uppercase"
+                sx={{ textAlign: "center", fontWeight: "bold" }}
               >
-                {alertLabel}
-              </Alert>
-            )}
-          </Box>
-        </Container>
-      </>
-    );
-  }
+                {language ? "bookings disponibles " : "Bookings available"}
+              </Typography>
+
+              <Divider />
+              {visibleBookings.length ? (
+                <Grid container spacing={4}>
+                  {visibleBookings.map((booking) => (
+                    <Grid item key={booking.id} xs={12} sm={6} lg={4}>
+                      <BookingCard
+                        booking={booking}
+                        setActualBooking={setActualBooking}
+                        setOpenUpdateModal={setOpenUpdateModal}
+                        language={language}
+                      />
+                    </Grid>
+                  ))}
+                </Grid>
+              ) : (
+                <Empty />
+              )}
+
+              {visibleBookings.length && (
+                <PaginationContainer
+                  data={data}
+                  cardsPerPage={cardsPerPage}
+                  onPageChange={handlePageChange}
+                />
+              )}
+              {showAlert && (
+                <Alert
+                  severity="success"
+                  variant="filled"
+                  onClose={() => setShowAlert(false)}
+                >
+                  {alertLabel}
+                </Alert>
+              )}
+            </Box>
+          </Container>
+        </>
+      );
+    }
+  };
+  return <>{renderContent()}</>;
 }
 
 export default App;
