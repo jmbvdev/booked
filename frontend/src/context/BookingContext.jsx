@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const BookingContext = createContext();
 
-const URL='http://localhost:3000/api/v1/bookings'
+const URL='http://localhost:3001/api/v1/bookings'
 
 export function BookingProvider({ children }) {
   const [bookings, setBookings] = useState({
